@@ -2,7 +2,9 @@ const express = require('express');
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
+const markdown = require('marked')
 const app = express();
+const sanitizeHTML = require('sanitize-html')
 
 let sessionOptions = session({
      secret: "Test Secret",
@@ -19,6 +21,12 @@ app.use(sessionOptions)
 app.use(flash())
 
 app.use(function(req, res, next){
+     res.locals.filterUserHTML = function(content){
+          return sanitizeHTML(markdown(content), {
+               allowedTags: ['p', 'br', 'ul', 'li', 'strong', 'bold', 'italic', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+               allowedAttributes: []
+          })
+     }
 
      res.locals.errors = req.flash("errors")
      res.locals.success = req.flash("success")
