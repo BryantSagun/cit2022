@@ -116,7 +116,8 @@ exports.profilePostsScreen = function(req, res){
                     postCount: req.postCount,
                     followerCount: req.followerCount,
                     followingCount: req.followingCount
-               }
+               },
+               title: `Profile for ${req.profileUser.username}`
           })
      }).catch(function(){
           res.render('404')
