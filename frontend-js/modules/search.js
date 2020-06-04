@@ -3,16 +3,17 @@ import DOMPurify from 'dompurify'
 
 export default class Search{
      constructor(){
-          this.injectHTML()
-          this.headerSearchIcon = document.querySelector(".header-search-icon")
-          this.overlay = document.querySelector(".search-overlay")
-          this.closeIcon = document.querySelector(".close-live-search")
-          this.inputField = document.querySelector("#live-search-field")
-          this.resultsArea = document.querySelector(".live-search-results")
-          this.loaderIcon = document.querySelector(".circle-loader")
-          this.typingWaitTimer
-          this.previousValue = ""
-          this.events()
+      this._csrf = document.querySelector('[name="_csrf"]').value
+      this.injectHTML()
+      this.headerSearchIcon = document.querySelector(".header-search-icon")
+      this.overlay = document.querySelector(".search-overlay")
+      this.closeIcon = document.querySelector(".close-live-search")
+      this.inputField = document.querySelector("#live-search-field")
+      this.resultsArea = document.querySelector(".live-search-results")
+      this.loaderIcon = document.querySelector(".circle-loader")
+      this.typingWaitTimer
+      this.previousValue = ""
+      this.events()
      }
 
      events(){
@@ -50,7 +51,10 @@ export default class Search{
      }
 
      sendRequest(){
-       axios.post('/search', {searchTerm: this.inputField.value}).then(response => {
+       axios.post('/search', {
+         _csrf: this._csrf,
+         searchTerm: this.inputField.value
+        }).then(response => {
          console.log(response.data)
          this.renderResultsHTML(response.data)
        }).catch(() => {
